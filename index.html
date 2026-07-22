@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7F7F5">
+<title>SUNDUKOFF — поток идей</title>
+<style>
+:root{
+  --bg:#F7F7F5; --card:#FFFFFF; --line:#DBDBD4; --zone:#EAEAE5;
+  --ink:#1A1A1A; --grey:#6B6B6B; --soft:#8E8E89;
+  --pad:clamp(18px,4.5vw,48px);
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:var(--pad)}
+
+.head{padding:clamp(20px,4vw,40px) 0 6px}
+.kicker{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+h1{font-size:clamp(30px,7vw,52px);font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-top:10px}
+.meta{margin-top:12px;font-size:13px;color:var(--soft);font-weight:500;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.meta b{color:var(--ink);font-weight:700}
+.dot{width:7px;height:7px;border-radius:50%;background:#34C759;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* фильтры */
+.filters{position:sticky;top:0;z-index:50;background:linear-gradient(var(--bg) 82%,rgba(247,247,245,0));padding:14px 0 16px;margin-top:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips + .chips{margin-top:8px}
+.fchip{border:1px solid var(--line);background:var(--card);color:var(--grey);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;font-family:var(--body)}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:#FFF}
+
+/* дата-разделитель */
+.day{margin:26px 0 12px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+
+/* карточка идеи с вырезом */
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:14px;padding:46px 18px 16px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.bite{position:absolute;left:-1px;top:-1px;background:var(--bg);padding:0 9px 9px 0;border-radius:0 0 20px 0;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.bite::before{content:"";position:absolute;right:-15px;top:0;width:16px;height:16px;background:radial-gradient(circle at 100% 100%, transparent 14.6px, var(--line) 15px 16px, var(--bg) 16.4px)}
+.bite::after{content:"";position:absolute;left:0;bottom:-15px;width:16px;height:16px;background:radial-gradient(circle at 100% 100%, transparent 14.6px, var(--line) 15px 16px, var(--bg) 16.4px)}
+.pchip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 13px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.pchip .e{font-size:13px;line-height:1}
+.tbadge{position:absolute;top:12px;right:14px;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);background:var(--zone);border-radius:999px;padding:5px 11px}
+.card h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3;margin-bottom:10px}
+.f{margin-bottom:9px;font-size:13.5px;line-height:1.55;color:var(--grey)}
+.f i{display:block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:2px}
+.f.formula{color:var(--ink);font-weight:600;font-size:13px;background:var(--zone);border-radius:10px;padding:8px 12px}
+.f.formula i{margin-bottom:3px}
+
+/* оценки-бары */
+.scores{margin:13px 0 4px;display:flex;flex-direction:column;gap:6px}
+.sc{display:grid;grid-template-columns:96px 1fr 20px;align-items:center;gap:10px}
+.sc .l{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.sc .track{display:block;height:5px;border-radius:3px;background:var(--zone);overflow:hidden}
+.sc .fill{display:block;height:100%;border-radius:3px;background:var(--ink)}
+.sc .n{font-size:11px;font-weight:700;color:var(--ink);text-align:right}
+
+/* промт */
+.prompt{margin-top:12px;border:1px dashed var(--line);border-radius:12px;padding:10px 12px}
+.prompt p{font-size:11.5px;line-height:1.5;color:var(--soft);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-word;margin-bottom:8px}
+.copy{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 13px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--body);-webkit-tap-highlight-color:transparent}
+.copy:active{background:var(--zone)}
+
+.empty{text-align:center;color:var(--soft);font-size:14px;padding:40px 0}
+.foot{text-align:center;color:var(--soft);font-size:12px;margin:30px 0 12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="kicker">SUNDUKOFF · штаб идей</div>
+    <h1>Поток идей</h1>
+    <div class="meta"><span class="dot"></span><span>Пополняется само · 2× в день</span><span>·</span><span><b id="cIdeas">0</b> идей</span></div>
+  </div>
+
+  <div class="filters">
+    <div class="chips" id="projChips"></div>
+    <div class="chips" id="typeChips"></div>
+  </div>
+
+  <div id="feed"><div class="empty">Загружаю идеи…</div></div>
+  <div class="foot">SUNDUKOFF · поток идей — бери, тести, помечай</div>
+</div>
+
+<script>
+(function(){
+  var state = {proj:'all', type:'all'}, ideas = [];
+
+  function parseIdeas(md){
+    var out = [];
+    var feed = md.split('<!--FEED_START-->')[1] || md;
+    var days = feed.split(/^## /m).slice(1);
+    days.forEach(function(dayBlock){
+      var dayTitle = dayBlock.split('\n')[0].trim();
+      var blocks = dayBlock.split(/^### /m).slice(1);
+      blocks.forEach(function(b){
+        var head = b.split('\n')[0].trim();
+        var m = head.match(/^(\S+)\s+(.+?)\s*·\s*(.+?)\s*·\s*[«"](.+?)[»"]/);
+        if(!m) return;
+        var idea = {day:dayTitle, emoji:m[1], proj:m[2].trim(), type:m[3].trim(), title:m[4].trim(), fields:[], scores:[], prompt:''};
+        var re = /^- \*\*(.+?):\*\*\s*(.+)$/gm, f;
+        while((f = re.exec(b)) !== null){
+          var k = f[1].trim(), v = f[2].trim();
+          if(/^оценк/i.test(k)){
+            var sre = /([а-яё]+)\s*(\d{1,2})/gi, s;
+            while((s = sre.exec(v)) !== null) idea.scores.push({l:s[1], n:Math.min(10,+s[2])});
+          } else if(/^промт/i.test(k)){
+            idea.prompt = v;
+          } else {
+            idea.fields.push({k:k, v:v});
+          }
+        }
+        out.push(idea);
+      });
+    });
+    return out;
+  }
+
+  function chip(label, val, group){
+    var b = document.createElement('button');
+    b.className = 'fchip' + ((state[group]===val)?' on':'');
+    b.textContent = label;
+    b.onclick = function(){ state[group] = val; render(); };
+    return b;
+  }
+
+  function render(){
+    var pc = document.getElementById('projChips'); pc.innerHTML='';
+    var projs = []; ideas.forEach(function(i){ if(projs.indexOf(i.emoji+' '+i.proj)<0) projs.push(i.emoji+' '+i.proj); });
+    // Чипы проектов показываем только если проектов больше одного
+    if(projs.length > 1){
+      pc.appendChild(chip('Все проекты','all','proj'));
+      projs.forEach(function(p){ pc.appendChild(chip(p, p.split(' ').slice(1).join(' '), 'proj')); });
+    }
+
+    var tc = document.getElementById('typeChips'); tc.innerHTML='';
+    tc.appendChild(chip('Все типы','all','type'));
+    tc.appendChild(chip('Промо и ивенты','promo','type'));
+    tc.appendChild(chip('Контент','content','type'));
+
+    var list = ideas.filter(function(i){
+      if(state.proj!=='all' && i.proj!==state.proj) return false;
+      if(state.type==='promo' && !/пром|ивент/i.test(i.type)) return false;
+      if(state.type==='content' && !/конт/i.test(i.type)) return false;
+      return true;
+    });
+
+    document.getElementById('cIdeas').textContent = ideas.length;
+    var cProjEl = document.getElementById('cProj'); if(cProjEl) cProjEl.textContent = projs.length;
+
+    var feed = document.getElementById('feed'); feed.innerHTML='';
+    if(!list.length){ feed.innerHTML = '<div class="empty">По этому фильтру идей пока нет</div>'; return; }
+
+    var lastDay = '';
+    list.forEach(function(i){
+      if(i.day !== lastDay){
+        lastDay = i.day;
+        var d = document.createElement('div'); d.className='day'; d.textContent = i.day;
+        feed.appendChild(d);
+      }
+      var c = document.createElement('div'); c.className='card';
+      var bite = document.createElement('span'); bite.className='bite';
+      bite.innerHTML = '<span class="pchip"><span class="e"></span><span></span></span>';
+      bite.querySelector('.e').textContent = i.emoji;
+      bite.querySelector('.pchip span:last-child').textContent = i.proj;
+      c.appendChild(bite);
+      var tb = document.createElement('span'); tb.className='tbadge'; tb.textContent = i.type; c.appendChild(tb);
+      var h = document.createElement('h3'); h.textContent = '«'+i.title+'»'; c.appendChild(h);
+      i.fields.forEach(function(f){
+        var d2 = document.createElement('div');
+        d2.className = 'f' + (/формула/i.test(f.k)?' formula':'');
+        var lab = document.createElement('i'); lab.textContent = f.k; d2.appendChild(lab);
+        d2.appendChild(document.createTextNode(f.v));
+        c.appendChild(d2);
+      });
+      if(i.scores.length){
+        var sc = document.createElement('div'); sc.className='scores';
+        i.scores.forEach(function(s){
+          var row = document.createElement('div'); row.className='sc';
+          row.innerHTML = '<span class="l"></span><span class="track"><span class="fill"></span></span><span class="n"></span>';
+          row.querySelector('.l').textContent = s.l;
+          row.querySelector('.fill').style.width = (s.n*10)+'%';
+          row.querySelector('.n').textContent = s.n;
+          sc.appendChild(row);
+        });
+        c.appendChild(sc);
+      }
+      if(i.prompt){
+        var pr = document.createElement('div'); pr.className='prompt';
+        var pp = document.createElement('p'); pp.textContent = i.prompt; pr.appendChild(pp);
+        var btn = document.createElement('button'); btn.className='copy'; btn.textContent='Скопировать промт';
+        btn.onclick = function(){
+          navigator.clipboard.writeText(i.prompt).then(function(){
+            btn.textContent='✓ Скопирован — вставь в ChatGPT';
+            setTimeout(function(){ btn.textContent='Скопировать промт'; }, 2200);
+          });
+        };
+        pr.appendChild(btn);
+        c.appendChild(pr);
+      }
+      feed.appendChild(c);
+    });
+  }
+
+  fetch('ideas.md', {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.text(); })
+    .then(function(md){ ideas = parseIdeas(md); render(); })
+    .catch(function(){
+      document.getElementById('feed').innerHTML = '<div class="empty">Не удалось загрузить ideas.md — открой страницу с сайта, не как файл</div>';
+    });
+})();
+</script>
+</body>
+</html>
