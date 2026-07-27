@@ -33,13 +33,23 @@ h1{font-size:clamp(30px,7vw,52px);font-weight:700;letter-spacing:-.02em;line-hei
 .fchip.on{background:var(--ink);border-color:var(--ink);color:#FFF}
 
 /* сетка ленты: моб 1 колонка, планшет 2, десктоп 3 */
-/* лента в один столбик, сгруппирована по дням */
-#feed{display:flex;flex-direction:column;gap:12px}
+/* лента: дни сверху вниз, идеи дня - горизонтальным свайпом */
+#feed{display:flex;flex-direction:column;gap:4px}
 
 /* дата-разделитель дня */
-.day{margin:24px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.day{margin:22px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 .day:first-child{margin-top:6px}
 .empty{text-align:center}
+
+/* горизонтальный ряд идей одного дня (свайп вбок) */
+.day-row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;padding:2px 0 14px;margin:0 calc(-1*var(--pad));
+  padding-left:var(--pad);padding-right:var(--pad);scrollbar-width:thin}
+.day-row::-webkit-scrollbar{height:5px}
+.day-row::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.day-row .card{flex:0 0 86%;max-width:340px;scroll-snap-align:start;margin-bottom:0}
+@media(min-width:560px){.day-row .card{flex-basis:46%}}
+@media(min-width:900px){.day-row .card{flex-basis:31%}}
 
 /* карточка идеи с вырезом */
 .card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:0;padding:44px 16px 15px;box-shadow:0 1px 2px rgba(0,0,0,.03);min-width:0;overflow-wrap:break-word;word-break:break-word}
@@ -159,12 +169,14 @@ h1{font-size:clamp(30px,7vw,52px);font-weight:700;letter-spacing:-.02em;line-hei
     var feed = document.getElementById('feed'); feed.innerHTML='';
     if(!list.length){ feed.innerHTML = '<div class="empty">По этому фильтру идей пока нет</div>'; return; }
 
-    var lastDay = '';
+    var lastDay = '', dayRow = null;
     list.forEach(function(i){
       if(i.day !== lastDay){
         lastDay = i.day;
         var d = document.createElement('div'); d.className='day'; d.textContent = i.day;
         feed.appendChild(d);
+        dayRow = document.createElement('div'); dayRow.className='day-row';
+        feed.appendChild(dayRow);
       }
       var c = document.createElement('div'); c.className='card';
       var bite = document.createElement('span'); bite.className='bite';
@@ -206,7 +218,7 @@ h1{font-size:clamp(30px,7vw,52px);font-weight:700;letter-spacing:-.02em;line-hei
         pr.appendChild(btn);
         c.appendChild(pr);
       }
-      feed.appendChild(c);
+      dayRow.appendChild(c);
     });
   }
 
